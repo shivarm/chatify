@@ -51,7 +51,7 @@ export const signup = async (req, res) => {
       // send welcome email
       try {
         const { CLIENT_URL } = ENV;
-        if (!CLIENT_URL) throw new Error("Client_URL is not set");
+        if (!CLIENT_URL) throw new Error("CLIENT_URL is not set");
         await sendWelcomeEmail(savedUser.email, savedUser.fullName, CLIENT_URL);
       } catch (error) {
         console.log("Error while sending email", error);
@@ -95,5 +95,5 @@ export const login = async (req, res) => {
 };
 export const logout = (_, res) => {
   res.cookie("jwt", "", { maxAge: 0 });
-  res.status(200).json({ message: "logout successfully" });
+  res.status(200).json({ message: "logged out successfully" });
 };
