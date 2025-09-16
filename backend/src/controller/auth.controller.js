@@ -1,7 +1,9 @@
 import User from "../model/user.js";
 import bcrypt from "bcryptjs";
 
-import { generateToken } from "../lib/utils.js"
+import { generateToken } from "../lib/utils.js";
+import { ENV } from "../lib/env.js";
+import { sendWelcomeEmail } from "../email/emailHandler.js";
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -45,6 +47,16 @@ export const signup = async (req, res) => {
         email: newUser.email,
         profilePic: newUser.profilePic,
       });
+
+      // send welcome email
+      try {
+        const { CLIENT_URL } = ENV;
+        if (!CLIENT_URL) throw new Error("Clent URL is not set");
+        await sendWelcomeEmail(savedUser.email, savedUser.fullName, CLIENT_URL);
+      } catch (error) {
+        console.log("Error while sending email", error);
+        res.status(500).json({ message: "Something went wrong" });
+      }
     } else {
       res.status(400).json({ message: "Invalid user data" });
     }
