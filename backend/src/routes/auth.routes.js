@@ -3,6 +3,9 @@ const router = express.Router();
 
 import { signup, login, logout, updateProfile } from "../controller/auth.controller.js";
 import { protectedRoute } from "../middleware/auth.middleware.js";
+import { arcjetProtection } from "../middleware/arcjet.middleware.js";
+
+router.use(arcjetProtection);
 
 router.post("/signup", signup);
 router.post("/login", login);
