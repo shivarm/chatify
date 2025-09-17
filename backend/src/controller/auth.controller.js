@@ -1,6 +1,6 @@
 import User from "../model/user.js";
 import bcrypt from "bcryptjs";
-import cloudinary from "../lib/cloudnary.js";
+import cloudinary from "../lib/cloudinary.js";
 
 import { generateToken } from "../lib/utils.js";
 import { ENV } from "../lib/env.js";
@@ -118,7 +118,7 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json({ updatedUser });
   } catch (error) {
-    console.log("Error in updateProfile controller");
+    console.log("Error in updateProfile controller", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };

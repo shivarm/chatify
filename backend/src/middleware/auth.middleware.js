@@ -25,7 +25,7 @@ export const protectedRoute = async (req, res, next) => {
     req.user = user; // we can get user in next middleware
     next();
   } catch (error) {
-    console.log("Error in protectRote middleware", error);
+    console.log("Error in protectedRoute middleware", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
