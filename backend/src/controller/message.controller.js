@@ -6,9 +6,6 @@ export const getAllContacts = async (req, res) => {
   try {
     const loggedinUserId = req.user._id;
 
-    if (!loggedinUserId) {
-      return res.status(401).json({ message: "Unauthorized user" });
-    }
     const filteredUsers = await User.find({ _id: { $ne: loggedinUserId } }).select("-password");
     res.status(200).json(filteredUsers);
   } catch (error) {
@@ -26,7 +23,7 @@ export const getChatPartners = async (req, res) => {
       $or: [{ senderId: loggedinUserId }, { receiverId: loggedinUserId }],
     });
 
-    const chatPartnerIdSet = [
+    const chatPartnerIds = [
       ...new Set(
         messages.map((msg) =>
           msg.senderId.toString() === loggedinUserId.toString()
@@ -35,9 +32,9 @@ export const getChatPartners = async (req, res) => {
         )
       ),
     ];
-    const chatPartnerIds = Array.from(chatPartnerIdSet);
-    const chatParters = await User.find({ _id: { $in: chatPartnerIds } }).select("-password");
-    res.status(200).json(chatParters);
+
+    const chatPartners = await User.find({ _id: { $in: chatPartnerIds } }).select("-password");
+    res.status(200).json(chatPartners);
   } catch (error) {
     console.log("Error in getChatPartners controller", error);
     res.status(500).json({ message: "Server error" });
