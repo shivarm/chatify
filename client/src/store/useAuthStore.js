@@ -13,7 +13,7 @@ export const useAuthStore = create((set) => ({
       set({ authUser: response.data });
     } catch (error) {
       console.log("Error in authCheck", error);
-      set({ authUser: false });
+      set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
     }
@@ -26,7 +26,7 @@ export const useAuthStore = create((set) => ({
       set({ authUser: response.data });
       toast.success("Account created successfully");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "An error occurred during sign up.");
     } finally {
       set({ isSigningUp: false });
     }
