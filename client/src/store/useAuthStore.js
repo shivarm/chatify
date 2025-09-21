@@ -67,7 +67,7 @@ export const useAuthStore = create((set) => ({
         error.response?.data?.message || "An error occurred during updating user profile."
       );
     } finally {
-      set({ updateProfile: false });
+      set({ isUpdatingProfile: false });
     }
   },
 }));
