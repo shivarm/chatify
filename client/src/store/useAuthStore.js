@@ -60,7 +60,7 @@ export const useAuthStore = create((set) => ({
     set({ isUpdatingProfile: true });
     try {
       const response = await axiosInstance.put("/auth/update", data);
-      set({ authUser: response.data });
+      set({ authUser: response.data.updatedUser });
       toast.success("Profile updated successfully");
     } catch (error) {
       toast.error(
