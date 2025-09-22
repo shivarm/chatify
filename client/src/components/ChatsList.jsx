@@ -1,18 +1,22 @@
 import { useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
-import UsersLoadingSkeleton from "./UserLoadingSkeleton";
 
-function ContactList() {
-  const { getAllContacts, allContacts, setSelectedUser, isUsersLoading } = useChatStore();
+import UserLoadingSkeleton from "./UserLoadingSkeleton";
+import NoChatsFound from "./NoChatsFound";
+
+function ChatsList() {
+  const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } = useChatStore();
 
   useEffect(() => {
-    getAllContacts();
-  }, [getAllContacts]);
+    getMyChatPartners();
+  }, [getMyChatPartners]);
 
-  if (isUsersLoading) return <UsersLoadingSkeleton />;
+  if (isUsersLoading) return <UserLoadingSkeleton />;
+  if (chats.length === 0) return <NoChatsFound />;
+
   return (
     <>
-      {allContacts.map((chat) => (
+      {chats.map((chat) => (
         <div
           key={chat._id}
           className="bg-cyan-500/10 p-4 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors"
@@ -33,4 +37,4 @@ function ContactList() {
   );
 }
 
-export default ContactList;
+export default ChatsList;
