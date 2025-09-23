@@ -42,7 +42,7 @@ function MessageInput() {
     reader.readAsDataURL(file);
   };
 
-  const removeImge = () => {
+  const removeImage = () => {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -58,7 +58,7 @@ function MessageInput() {
               className="w-20 h-20 object-cover rounded-lg border border-slate-700"
             />
             <button
-              onClick={removeImge}
+              onClick={removeImage}
               className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-200 hover:bg-slate-700"
               type="button"
             >
