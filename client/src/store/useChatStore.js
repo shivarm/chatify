@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import { useAuthStore } from "./useAuthStore";
 
 export const useChatStore = create((set, get) => ({
   allContacts: [],
@@ -57,6 +58,33 @@ export const useChatStore = create((set, get) => ({
       toast.error(error.response?.data?.message || "An error occurred while getting messages.");
     } finally {
       set({ isMessagesLoading: false });
+    }
+  },
+
+  sendMessage: async (messageData) => {
+    const { selectedUser, messages } = get();
+
+    // update UI before sending to server
+    const { authUser } = useAuthStore.getState();
+    const tempId = `temp-${Date.now()}`;
+
+    const optimisticMessage = {
+      _id: tempId,
+      senderId: authUser._id,
+      receiverId: selectedUser._id,
+      text: messageData.text,
+      image: new Date().toISOString(),
+      isOptimistic: true, // optional, flag to identify optimistic message
+    };
+
+    set({ messages: [...messages, optimisticMessage] });
+    try {
+      const response = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+      set({ messages: messages.concat(response.data) });
+    } catch (error) {
+      // remove optimisticMessage if got failure 
+      set({messages: messages});
+      toast.error(error.response?.data?.message || "An error occurred while sending message.");
     }
   },
 }));
