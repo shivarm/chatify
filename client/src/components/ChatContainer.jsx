@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import ChatHeader from "./ChatHeader";
 
 import { useAuthStore } from "../store/useAuthStore";
@@ -11,6 +11,8 @@ import MessageInput from "./MessageInput";
 function ChatContainer() {
   const { selectedUser, messages, getMessagesByUserId, isMessagesLoading } = useChatStore();
   const { authUser } = useAuthStore();
+  const messageRef = useRef(null);
+  const prevMessagesLength = useRef(messages.length);
 
   useEffect(() => {
     if (selectedUser) {
@@ -18,7 +20,15 @@ function ChatContainer() {
     }
   }, [selectedUser, getMessagesByUserId]);
 
-  if (!selectedUser) return null;
+  useEffect(() => {
+    // Only scroll if a new message is added to the end
+    if (messages.length > prevMessagesLength.current) {
+      if (messageRef.current) {
+        messageRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+    prevMessagesLength.current = messages.length;
+  }, [messages]);
 
   return (
     <>
@@ -51,6 +61,7 @@ function ChatContainer() {
                 </div>
               </div>
             ))}
+            <div ref={messageRef} />
           </div>
         ) : isMessagesLoading ? (
           <MessagesLoadingSkeloton />
