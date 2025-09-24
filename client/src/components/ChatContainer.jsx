@@ -12,6 +12,7 @@ function ChatContainer() {
   const { selectedUser, messages, getMessagesByUserId, isMessagesLoading } = useChatStore();
   const { authUser } = useAuthStore();
   const messageRef = useRef(null);
+  const prevMessagesLength = useRef(messages.length);
 
   useEffect(() => {
     if (selectedUser) {
@@ -20,9 +21,13 @@ function ChatContainer() {
   }, [selectedUser, getMessagesByUserId]);
 
   useEffect(() => {
-    if (messageRef.current) {
-      messageRef.current.scrollIntoView({ behavior: "smooth" });
+    // Only scroll if a new message is added to the end
+    if (messages.length > prevMessagesLength.current) {
+      if (messageRef.current) {
+        messageRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }
+    prevMessagesLength.current = messages.length;
   }, [messages]);
 
   return (
