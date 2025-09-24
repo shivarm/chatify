@@ -1,16 +1,15 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
 import path from "node:path";
 
 import { ENV } from "./lib/env.js";
 import { connectDB } from "./lib/db.js";
+import { app, server } from "./lib/socket.js";
 
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 
-const app = express();
 const __dirname = path.resolve();
 
 const PORT = ENV.PORT || 5001;
@@ -30,7 +29,7 @@ if (ENV.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Server running on port: " + PORT);
   connectDB();
 });
